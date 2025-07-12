@@ -644,8 +644,8 @@
                                 <div class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
                                     style="width: 32px; height: 32px;"> 
                                     {{ booking.booked_by.username|first|upper }}
-                                </div> 
-                                {% endif %} {{booking.booked_by.username}}
+                                </div>  
+                                {% endif %} <span class="">{{booking.booked_by.username}} <br/><a href="tel:+{{booking.booked_by.phone}}" class="text-decoration-none"> {{booking.booked_by.phone}} </a></span>
                             </span>
                             <span><i class="fas fa-money-bill-wave"></i> GH₵{{ booking.ride.price_per_seat }} per
                                 seat</span> 

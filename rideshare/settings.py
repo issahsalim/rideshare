@@ -25,6 +25,13 @@ EMAIL_PORT=587
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  
 DEFAULT_FROM_EMAIL='Share Ride<codesimplified7@gmail.com>'   
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": BASE_DIR / "django_cache",
+    }
+}
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/

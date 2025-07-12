@@ -17,99 +17,99 @@
 </head>
 <style>
     @media (max-width: 992px) {
-    .search-form,.search-box{
-        display: none;
-    }
-}
 
+        .search-form,
+        .search-box {
+            display: none;
+        }
+    }
 </style>
- 
+
 <body>
     <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <!-- Logo -->
-      <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
-        <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
-          class="d-inline-block align-text-top me-2">
-        <span>RideShare</span>
-      </a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
+                    class="d-inline-block align-text-top me-2">
+                <span>RideShare</span>
+            </a>
 
-      <!-- Hamburger for mobile -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+            <!-- Hamburger for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-      <!-- Links -->
-      <div class="collapse navbar-collapse" id="navbarContent">
-        {% if request.user.is_authenticated %}
-        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
-          </li>
-           <li class="nav-item">
-            <a class="nav-link" href="{% url 'my_rides' %}">My Ride</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'safety' %}">Safety</a>
-          </li>
-          <!-- <li class="nav-item">
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                {% if request.user.is_authenticated %}
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_rides' %}">My Ride</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'safety' %}">Safety</a>
+                    </li>
+                    <!-- <li class="nav-item">
             <a class="nav-link" href="{% url 'help' %}">Help</a>
           </li> -->
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
-          </li>
-        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
+                    </li>
+                </ul>
 
-        <!-- User Profile Dropdown -->
-        <div class="dropdown ms-auto">
-          <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            {% if request.user.profile_pic %}
-            <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
-              class="rounded-circle me-2"> 
-            {% else %}
-            <div
-              class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
-              style="width: 32px; height: 32px;">
-              {{ request.user.username|first|upper }}
-            </div> 
-            {% endif %}
-            <span class="d-none d-lg-inline">{{ request.user.username }}</span>
-          </a>
+                <!-- User Profile Dropdown -->
+                <div class="dropdown ms-auto">
+                    <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if request.user.profile_pic %}
+                        <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
+                            class="rounded-circle me-2">
+                        {% else %}
+                        <div class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+                            style="width: 32px; height: 32px;">
+                            {{ request.user.username|first|upper }}
+                        </div>
+                        {% endif %}
+                        <span class="d-none d-lg-inline">{{ request.user.username }}</span>
+                    </a>
 
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
 
-            <li><a class="dropdown-item" href="{% url 'profile' %}">
-                <i class="fas fa-user-edit me-2"></i>My profile 
-              </a></li>
-            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
-                <i class="fas fa-user-edit me-2"></i>Edit Profile
-              </a></li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
-                <i class="fas fa-sign-out-alt me-2"></i>Logout
-              </a></li>
-          </ul>
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">
+                                <i class="fas fa-user-edit me-2"></i>My profile
+                            </a></li>
+                        <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
+                                <i class="fas fa-user-edit me-2"></i>Edit Profile
+                            </a></li>
+                        <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                    </ul>
+                </div>
+
+                {% else %}
+                <!-- Auth Buttons -->
+                <div class="d-flex ms-auto">
+                    <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+                </div>
+                {% endif %}
+            </div>
         </div>
-
-        {% else %}
-        <!-- Auth Buttons -->
-        <div class="d-flex ms-auto">
-          <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
-          <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  </nav>
+    </nav>
 
     <style>
         button:disabled {
@@ -230,6 +230,8 @@
                 <div class="ride-card">
                     <!-- Top Section with Driver Info and Status -->
                     <div class="ride-header">
+                        {% load cache %}
+                        {% cache 300 "ride_list_homepage" %}
                         <div class="driver-info">
                             {% if rides.driver.profile_pic %}
                             <img src="{{rides.driver.profile_pic.url}}" alt="Driver" class="driver-photo">
@@ -248,12 +250,13 @@
                                 </div>
                             </div>
                         </div>
+                        {% endcache %}
 
                         <div class="status-badge">
                             {% if rides.ride_status == "active" %}
-                            <span class="active fw-bold text-success"  >Active</span>
+                            <span class="active fw-bold text-success">Active</span>
                             {% elif rides.ride_status == "cancelled" %}
-                            <span class="cancelled fw-bold text-danger" >Cancelled</span>
+                            <span class="cancelled fw-bold text-danger">Cancelled</span>
                             {%endif%}
                         </div>
 
@@ -355,7 +358,7 @@
                             {% elif rides.ride_status == "cancelled" %}
                             <span style="color: red; font-weight: bold;">Cancelled</span>
                             {%endif%}
-                        </div> 
+                        </div>
                         <div class="ride-price">
                             <span class="price">{{rides.price_per_seat}}</span>
                             <span class="per-person">per person</span>
@@ -515,12 +518,13 @@
     </div> -->
 
     <!-- Footer -->
-       <footer class="footer">
+    <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
                     <h3>RideShare Ghana</h3>
-                    <p>Affordable carpooling for Ghanaians. Travel between cities for less by sharing rides with verified drivers.</p>
+                    <p>Affordable carpooling for Ghanaians. Travel between cities for less by sharing rides with
+                        verified drivers.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -528,7 +532,7 @@
                         <a href="#"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-col">
                     <h3>Company</h3>
                     <ul>
@@ -539,7 +543,7 @@
                         <!-- <li><a href=""></a></li> -->
                     </ul>
                 </div>
-                
+
                 <div class="footer-col">
                     <h3>Popular Routes</h3>
                     <ul>
@@ -550,7 +554,7 @@
                         <li><a href="#">Accra to Ho</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-col">
                     <h3>Contact</h3>
                     <ul>
@@ -560,7 +564,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2023 RideShare Ghana. All rights reserved.</p>
                 <div class="footer-links">

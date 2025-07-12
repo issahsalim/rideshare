@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.views import PasswordResetView 
 from django.urls import reverse_lazy 
 from datetime import datetime
+from django.views.decorators.cache import cache_page
 
 # Create your views here.
 User= get_user_model() 
@@ -35,7 +36,6 @@ class CustomPasswordResetView(PasswordResetView):
             return self.form_invalid(form)
    
    
-
 def index(request):
     return render(request, 'index.html')
 
@@ -74,7 +74,6 @@ def login_view(request):
 
     return render(request, 'login.html', {'form': form})
 
-
 @login_required
 def offer_ride(request):
     if request.method == 'POST':
@@ -100,7 +99,6 @@ def offer_ride(request):
     else: 
         form = RidePostForm() 
     return render(request, 'offer-ride.html', {'form': form,})
-
 
 @login_required
 def find_ride(request):
