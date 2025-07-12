@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Ride Bookings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary-color: #CF0921;
+      /* Ghana red */
+      --primary-dark: #A8071B;
+      --secondary-color: #FCD20F;
+      /* Ghana gold */
+      --accent-color: #006B3D;
+      /* Ghana green */
+      --dark-color: #000000;
+      /* Ghana black */
+      --light-color: #F5F5F5;
+      --gray-color: #6C757D;
+      --light-gray: #E9ECEF;
+      --white: #FFFFFF;
+      --gold-light: #FDE68A;
+      --green-light: #D1FAE5;
+      --border-radius: 10px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      background-color: var(--light-color);
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+    }
+
+    .booking-card {
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 6px solid var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .booking-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .ride-header {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--primary-dark);
+    }
+
+    .ride-details p {
+      margin: 0.3rem 0;
+    }
+
+    .badge-status {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.85rem;
+      border-radius: var(--border-radius);
+    }
+
+    .badge-active {
+      background-color: var(--green-light);
+      color: var(--accent-color);
+    }
+
+    .badge-cancelled {
+      background-color: var(--gold-light);
+      color: var(--primary-dark);
+    }
+
+    .no-bookings {
+      text-align: center;
+      font-size: 1.5rem;
+      color: var(--gray-color);
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+
+<body>
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
+          class="d-inline-block align-text-top me-2">
+        <span>RideShare</span>
+      </a>
+
+      <!-- Hamburger for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'safety' %}">Safety</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'help' %}">Help</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
+          </li>
+        </ul>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown ms-auto">
+          <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
+              class="rounded-circle me-2">
+            {% else %}
+            <div
+              class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+              style="width: 32px; height: 32px;">
+              {{ request.user.username|first|upper }}
+            </div>
+            {% endif %}
+            <span class="d-none d-lg-inline">{{ request.user.username }}</span> 
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+            <li><a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="fas fa-user-edit me-2"></i>My profile 
+              </a></li>
+            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+              </a></li>
+
+            
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a></li>
+          </ul>
+        </div>
+
+        {% else %}
+        <!-- Auth Buttons -->
+        <div class="d-flex ms-auto">
+          <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
+          <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  {% if messages %}
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      {% for message in messages %}
+      <div class="col-md-8">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+<div class="container">
+    <h2 class="text-center mb-5" style="color: var(--primary-color); font-weight: bold;">
+      {{ request.user.username }}'s Ride Bookings
+    </h2>
+
+    {% for mybook in myboks %}
+    <div class="booking-card p-4 mb-4 shadow-sm rounded"
+      style="background-color: #fff; border-left: 6px solid #CF0921;">
+      <div class="ride-header fs-5 fw-bold text-danger mb-2">
+        {{ mybook.ride.departure }} → {{ mybook.ride.destination }}
+      </div>
+
+      <!-- Driver Profile Section -->
+      <div class="driver-profile-section mb-3 p-3 rounded" style="background-color: #f8f9fa;">
+        <div class="d-flex align-items-center">
+          <!-- Driver Profile Picture -->
+          {% if mybook.ride.driver.profile_pic %}
+            <img src="{{ mybook.ride.driver.profile_pic.url }}" 
+                 alt="{{ mybook.ride.driver.username }}" 
+                 class="rounded-circle me-3" 
+                 width="60" 
+                 height="60">
+          {% else %}
+            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" 
+                 style="width: 60px; height: 60px; font-size: 24px;">
+              {{ mybook.ride.driver.username|first|upper }}
+            </div>
+          {% endif %}
+          
+          <!-- Driver Information -->
+          <div>
+            <h5 class="mb-1">{{ mybook.ride.driver.get_full_name|default:mybook.ride.driver.username }}</h5>
+            <div class="d-flex align-items-center mb-1">
+              <i class="fas fa-phone me-2 text-muted"></i>
+              <span>
+                {% if mybook.ride.driver.phone %}
+                  <a href="tel:{{ mybook.ride.driver.phone }}" class="text-decoration-none">
+                    {{ mybook.ride.driver.phone }}
+                  </a>
+                {% else %}
+                  <span class="text-muted">Phone not provided</span>
+                {% endif %}
+              </span>
+            </div>
+            <div class="rating small">
+              <i class="fas fa-star text-warning"></i>
+              <span>4.8</span>
+              <span class="text-muted">(24 reviews)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ride-details">
+        <p><strong>Date:</strong> {{ mybook.ride.departure_date }}</p>
+        <p><strong>Time:</strong> {{ mybook.ride.departure_time }}</p>
+        <p><strong>Car Model:</strong> {{ mybook.ride.car_model }}</p>
+        <p><strong>Price per Seat:</strong> GH₵{{ mybook.ride.price_per_seat }}</p>
+        <p>
+          <strong>Your Booking Status:</strong>
+          {% if mybook.status == "active" %}
+          <span style="color: green; font-weight: bold;">Active</span>
+          {% elif mybook.status == "cancelled" %}
+          <span style="color: red; font-weight: bold;">Cancelled</span>
+          {% else %}
+          <span class="text-muted">{{ mybook.status }}</span>
+          {% endif %}
+        </p>
+        <p>
+          <strong>Ride Status:</strong>
+          {% if mybook.ride.ride_status == "active" %}
+          <span style="color: green; font-weight: bold;">Active</span>
+          {% elif mybook.ride.ride_status == "cancelled" %}
+          <span style="color: red; font-weight: bold;">Cancelled</span>
+          {% else %}
+          <span class="text-muted">{{ mybook.ride.ride_status }}</span>
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="mt-3 d-flex gap-3">
+        {% if mybook.status == "active" %}
+        <a href="#" class="btn btn-warning btn-sm cancel-btn" data-url="{% url 'cancelbooking' mybook.id %}">Cancel</a>
+        {% elif mybook.status == "cancelled" %}
+        <a href="#" class="btn btn-danger btn-sm delete-btn" data-url="{% url 'deletebooking' mybook.id %}">Delete</a>
+        {% endif %} 
+        {% if mybook.ride.ride_status == "active" and mybook.status == "cancelled" %}
+        <a href="{% url 'activatebooking' mybook.id %}" class="btn btn-success btn-sm">Activate</a>
+        {% endif %}
+        
+        
+      </div>
+    </div> 
+    {% empty %}
+    <div class="text-center mt-5 fs-4 text-muted">No bookings yet 😛</div>
+    {% endfor %}
+</div>
+
+<style>
+.driver-profile-section {
+    border: 1px solid #e0e0e0;
+}
+.rating {
+    display: inline-flex;
+    align-items: center;
+}
+.rating i {
+    margin-right: 3px;
+}
+</style>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Cancel booking
+    document.querySelectorAll('.cancel-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.dataset.url;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you really want to cancel this booking?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it',
+                cancelButtonText: 'No, keep it',
+                confirmButtonColor: '#f59e0b',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+
+    // Delete booking
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.dataset.url;
+
+            Swal.fire({
+                title: 'Delete Booking?',
+                text: "This cannot be undone!",
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'No, cancel',
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+
+    // Activate booking (optional)
+    document.querySelectorAll('.activate-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.dataset.url;
+
+            Swal.fire({
+                title: 'Activate Booking?',
+                text: "Passenger will be re-added to the ride",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, activate it',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+});
+</script>
+
+</body>
+
+</html>

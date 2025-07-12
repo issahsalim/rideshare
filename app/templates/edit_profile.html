@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3 text-center">
+                            {% if request.user.profile_pic %}
+                                <img src="{{ request.user.profile_pic.url }}" alt="Profile Picture" 
+                                     class="rounded-circle mb-3" width="120" height="120" id="profile-pic-preview">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-3" 
+                                     style="width:120px; height:120px; margin: 0 auto;">
+                                    <span class="text-white" style="font-size: 3rem;">{{ request.user.first_name|first|upper }}</span>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <label for="id_profile_pic" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-camera me-2"></i>Change Photo
+                                </label>
+                                {{ form.profile_pic }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            {{ form.email }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            {{ form.phone }}
+                            <small class="text-muted">Format: +233XXXXXXXXX</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Preview profile picture before upload
+document.getElementById('id_profile_pic').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('profile-pic-preview');
+            if (preview) {
+                preview.src = e.target.result;
+            } else {
+                // If no image exists, create the preview element
+                const container = document.querySelector('.mb-3.text-center');
+                const img = document.createElement('img');
+                img.id = 'profile-pic-preview';
+                img.className = 'rounded-circle mb-3';
+                img.width = 120;
+                img.height = 120;
+                img.src = e.target.result;
+                container.insertBefore(img, container.firstChild);
+            }
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShare - About Us</title>
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" >
+                <span>RideShare</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="find-ride.html" class="nav-link">Find a ride</a>
+                <a href="offer-ride.html" class="nav-link">Offer a ride</a>
+                <a href="how-it-works.html" class="nav-link">How it works</a>
+                <a href="safety.html" class="nav-link">Safety</a>
+                <a href="help.html" class="nav-link">Help</a>
+            </div>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Log in</a>
+                <a href="signup.html" class="btn btn-primary">Sign up</a>
+            </div>
+            
+            <button class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    <main>
+        <section style="background-color: rgb(250, 61, 61);" class="about-hero">
+            <h2>About RideShare<span>Ghana</span></h2>
+            <p>Connecting Ghana, one ride at a time!</p>
+        </section>
+
+        <section class="mission">
+            <div class="mission-text">
+                <h3>Our Mission</h3>
+                <p>At RideShare, we believe in affordable, safe, and eco-friendly travel. We connect drivers with empty seats to passengers heading the same way, reducing costs and carbon footprints across Ghana.</p>
+            </div>
+            <div class="mission-image">
+                <img src="ghana-map.png" alt="Ghana Map">
+            </div>
+        </section>
+
+        <section class="values">
+            <h3>Our Core Values</h3>
+            <div class="values-grid">
+                <div class="value-card">
+                    <h4>Affordability</h4>
+                    <p>Save money by sharing rides instead of traveling alone.</p>
+                </div>
+                <div class="value-card">
+                    <h4>Safety</h4>
+                    <p>Verified profiles, ratings, and secure payments for peace of mind.</p>
+                </div>
+                <div class="value-card">
+                    <h4>Community</h4>
+                    <p>Meet fellow travelers and build trust on the road.</p>
+                </div>
+                <div class="value-card">
+                    <h4>Sustainability</h4>
+                    <p>Fewer cars = less traffic and pollution.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="team">
+            <h3>Meet the Team</h3>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="team1.jpg" alt="Team Member">
+                    <h4>Asibey Isaac Osei</h4>
+                    <p>Founder & CEO</p>
+                </div>
+                <div class="team-card">
+                    <img src="team2.jpg" alt="Team Member">
+                    <h4>Bronya Kwesi</h4>
+                    <p>Head of Operations</p>
+                </div>
+                <div class="team-card">
+                    <img src="team3.jpg" alt="Team Member">
+                    <h4>Abdul Salim Boresa (GRR)</h4>
+                    <p>Lead Developer</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+     <!-- Updated footer section -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <img src="assets/images/logo-white.png" alt="RideShare Ghana">
+        <p>Travel across Ghana affordably while supporting local drivers.</p>
+        <div class="ghana-motif">
+          <span class="symbol">✻</span> 
+          <span class="symbol">⫶</span>
+          <span class="symbol">✣</span>
+        </div>
+      </div>
+      <!-- Rest of footer content -->
+    </div>
+  </div>
+</footer>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>RideShare Ghana</h3>
+                    <p>Affordable carpooling for Ghanaians. Travel between cities for less by sharing rides with verified drivers.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="about.html">About us</a></li>
+                        <li><a href="#">How it works</a></li>
+                        <li><a href="#">Safety</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Popular Routes</h3>
+                    <ul>
+                        <li><a href="#">Accra to Kumasi</a></li>
+                        <li><a href="#">Kumasi to Tamale</a></li>
+                        <li><a href="#">Accra to Cape Coast</a></li>
+                        <li><a href="#">Takoradi to Kumasi</a></li>
+                        <li><a href="#">Accra to Ho</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@ridesharegh.com</li>
+                        <li><i class="fas fa-phone"></i> +233 24 123 4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 RideShare Ghana. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

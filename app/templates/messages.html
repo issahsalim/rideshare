@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | RideShare Ghana</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/messages.css'%} ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" >
+                <span>RideShare</span>
+            </a>
+            
+         <div class="nav-links">
+            <a href="{% url 'find_ride' %}" class="nav-link {% if request.resolver_match.url_name == 'find_ride' %}active{% endif %}">Find a ride</a>
+            <a href="{% url 'offer_ride' %}" class="nav-link {% if request.resolver_match.url_name == 'offer_ride' %}active{% endif %}">Offer a ride</a>
+            <a href="{% url 'my_rides' %}" class="nav-link {% if request.resolver_match.url_name == 'my_rides' %}active{% endif %}">My Rides</a>
+            <a href="{% url 'messages' %}" class="nav-link {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">Messages</a>
+        </div>
+
+            
+            <div class="user-menu">
+                <!-- <div class="notification-badge">3</div> -->
+                <img src="assets/images/user-avatar.jpg" alt="User" class="user-avatar">
+                <span class="user-name">Kwame</span>
+                <i class="fas fa-chevron-down"></i>
+                
+                <div class="dropdown-menu">
+                    <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="payment.html"><i class="fas fa-wallet"></i> Payment</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+            
+            <button class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="messages-container">
+        <div class="container" >
+            <div class="messages-header">
+                <h1><i class="fas fa-comments"></i> Messages</h1>
+                <div class="search-conversations">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search conversations...">
+                </div>
+            </div>
+            
+            <div class="messages-grid">
+                <!-- Conversations List -->
+                <div class="conversations-list">
+                    <div class="conversation active">
+                        <img src="assets/images/user1.jpg" alt="Ama" class="user-avatar">
+                        <div class="conversation-details">
+                            <div class="conversation-header">
+                                <span class="user-name">Ama B.</span>
+                                <span class="time">Today, 10:30 AM</span>
+                            </div>
+                            <p class="last-message">Hi Kwame, I'll be at the meeting point by 7:15 AM</p>
+                            <div class="conversation-badge">
+                                <span class="unread-count">2</span>
+                                <i class="fas fa-check-double seen"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="conversation" >
+                        <img src="assets/images/driver2.jpg" alt="Yaw" class="user-avatar">
+                        <div class="conversation-details">
+                            <div class="conversation-header">
+                                <span class="user-name">Yaw K. (Accra → Kumasi)</span>
+                                <span class="time">Yesterday</span>
+                            </div>
+                            <p class="last-message">Thanks for riding with me!</p>
+                            <div class="conversation-badge">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="conversation">
+                        <img src="assets/images/user3.jpg" alt="Esi" class="user-avatar">
+                        <div class="conversation-details">
+                            <div class="conversation-header">
+                                <span class="user-name">Esi A.</span>
+                                <span class="time">Dec 12</span>
+                            </div>
+                            <p class="last-message">Can we change the meeting point to Madina station?</p>
+                            <div class="conversation-badge">
+                                <i class="fas fa-check-double seen"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="conversation">
+                        <img src="assets/images/driver1.jpg" alt="Kofi" class="user-avatar">
+                        <div class="conversation-details">
+                            <div class="conversation-header">
+                                <span class="user-name">Kofi M. (Kumasi → Tamale)</span>
+                                <span class="time">Dec 10</span>
+                            </div>
+                            <p class="last-message">I've sent you a ride request for Dec 18</p>
+                            <div class="conversation-badge">
+                                <i class="fas fa-check-double seen"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Conversation View -->
+                <div class="conversation-view">
+                    <div class="conversation-header">
+                        <div class="user-info">
+                            <img src="assets/images/user1.jpg" alt="Ama" class="user-avatar">
+                            <div>
+                                <h3>Ama B.</h3>
+                                <p class="ride-info">Accra → Kumasi • Fri, 15 Dec • 07:30 AM</p>
+                            </div>
+                        </div>
+                        <div class="conversation-actions">
+                            <button class="btn-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </button>
+                            <button class="btn-icon">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="messages-area">
+                        <!-- Message from Ama -->
+                        <div class="message received">
+                            <img src="assets/images/user1.jpg" alt="Ama" class="user-avatar">
+                            <div class="message-content">
+                                <p>Hi Kwame, I've booked a seat for your ride to Kumasi on Friday</p>
+                                <span class="message-time">Wed, 10:15 AM</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Message from You -->
+                        <div class="message sent">
+                            <div class="message-content">
+                                <p>Hello Ama, thanks for booking! Where would you like to meet?</p>
+                                <span class="message-time">Wed, 10:20 AM <i class="fas fa-check-double seen"></i></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Message from Ama -->
+                        <div class="message received">
+                            <img src="assets/images/user1.jpg" alt="Ama" class="user-avatar">
+                            <div class="message-content">
+                                <p>Can we meet at Circle Interchange? Near the Shell station</p>
+                                <span class="message-time">Wed, 10:22 AM</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Message from You -->
+                        <div class="message sent">
+                            <div class="message-content">
+                                <p>That works for me. I'll be in a red Toyota Corolla with license plate GR 1234-20</p>
+                                <span class="message-time">Wed, 10:25 AM <i class="fas fa-check-double seen"></i></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Message from Ama -->
+                        <div class="message received">
+                            <img src="assets/images/user1.jpg" alt="Ama" class="user-avatar">
+                            <div class="message-content">
+                                <p>Perfect! I'll be there by 7:15 AM. Looking forward to the trip</p>
+                                <span class="message-time">Today, 10:30 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-composer">
+                        <div class="composer-actions">
+                            <button class="btn-icon">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <button class="btn-icon">
+                                <i class="fas fa-smile"></i>
+                            </button>
+                        </div>
+                        <input type="text" placeholder="Type your message...">
+                        <button class="btn btn-primary send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Ride Details Panel -->
+                <div class="ride-details-panel">
+                    <div class="panel-header">
+                        <h3>Ride Details</h3>
+                        <button class="btn-icon close-panel">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="ride-info-card">
+                        <div class="route">
+                            <div class="departure">
+                                <span class="city">Accra</span>
+                                <span class="place">Circle Interchange</span>
+                            </div>
+                            <div class="duration">
+                                <i class="fas fa-arrow-right"></i>
+                                <span>4h 30m</span>
+                            </div>
+                            <div class="arrival">
+                                <span class="city">Kumasi</span>
+                                <span class="place">Kejetia Station</span>
+                            </div>
+                        </div>
+                        
+                        <div class="ride-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Fri, 15 Dec 2023</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="far fa-clock"></i>
+                                <span>07:30 AM</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>GH₵ 60 per seat</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-user-friends"></i>
+                                <span>3/4 seats booked</span>
+                            </div>
+                        </div>
+                        
+                        <div class="vehicle-details">
+                            <h4>Vehicle Information</h4>
+                            <div class="vehicle-info">
+                                <img src="assets/images/car1.jpg" alt="Toyota Corolla" class="vehicle-image">
+                                <div>
+                                    <p>Toyota Corolla • 2020</p>
+                                    <p>Red • GR 1234-20</p>
+                                    <p>Air Conditioning</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="passengers-list">
+                            <h4>Passengers</h4>
+                            <div class="passenger">
+                                <img src="assets/images/user1.jpg" alt="Ama">
+                                <div class="passenger-info">
+                                    <span class="name">Ama B.</span>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.5</span>
+                                        <span class="reviews">(12 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="passenger">
+                                <img src="assets/images/user2.jpg" alt="Yaw">
+                                <div class="passenger-info">
+                                    <span class="name">Yaw K.</span>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.2</span>
+                                        <span class="reviews">(8 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="passenger">
+                                <img src="assets/images/user3.jpg" alt="Esi">
+                                <div class="passenger-info">
+                                    <span class="name">Esi A.</span>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>4.9</span>
+                                        <span class="reviews">(25 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-edit"></i> Edit Ride
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-info-circle"></i> View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <!-- Same footer as index.html -->
+    </footer>
+
+    <script src="js/messages.js"></script>
+</body>
+</html>

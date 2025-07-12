@@ -1,0 +1,748 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* My Rides Page Styles */
+    .my-rides-container {
+        padding: 40px 0 80px;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: var(--dark-color);
+    }
+
+    .page-header p {
+        font-size: 1.1rem;
+        color: var(--gray-color);
+        margin-bottom: 15px;
+    }
+
+    .ghana-flag {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .ghana-flag span {
+        height: 6px;
+        width: 40px;
+        margin: 0 2px;
+        border-radius: 3px;
+    }
+
+    .ghana-flag .red {
+        background: var(--primary-color);
+    }
+
+    .ghana-flag .gold {
+        background: var(--secondary-color);
+    }
+
+    .ghana-flag .green {
+        background: var(--accent-color);
+    }
+
+    .ghana-flag .star {
+        position: absolute;
+        top: 0;
+        color: var(--secondary-color);
+        font-size: 1.5rem;
+    }
+
+    .rides-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--light-gray);
+        margin-bottom: 30px;
+    }
+
+    .tab-btn {
+        padding: 12px 24px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-weight: 500;
+        color: var(--gray-color);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .tab-btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .tab-btn:hover:not(.active) {
+        color: var(--dark-color);
+    }
+
+    .rides-section {
+        display: none;
+    }
+
+    .rides-section.active {
+        display: block;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-header h2 i {
+        color: var(--primary-color);
+    }
+
+    .filter-dropdown select {
+        padding: 8px 12px;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--light-gray);
+        background-color: white;
+    }
+
+    .rides-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .ride-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 20px;
+        box-shadow: var(--box-shadow);
+        position: relative;
+    }
+
+    .ride-card.driver {
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .ride-card.passenger {
+        border-left: 4px solid var(--secondary-color);
+    }
+
+    .ride-status {
+        position: absolute;
+        top: 15px;
+        right: 90px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 4px;
+
+    }
+
+    .ride-status i {
+        margin-right: 9px;
+    }
+
+    .ride-status.upcoming {
+        background-color: rgba(252, 210, 15, 0.1);
+        color: var(--secondary-color);
+    }
+
+    .ride-status.completed {
+        background-color: rgba(0, 107, 61, 0.1);
+        color: var(--accent-color);
+    }
+
+    .ride-header {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .route {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .departure,
+    .arrival {
+        flex: 1;
+    }
+
+    .departure {
+        text-align: left;
+    }
+
+    .arrival {
+        text-align: right;
+    }
+
+    .city {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .place {
+        font-size: 0.9rem;
+        color: var(--gray-color);
+    }
+
+    .duration {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        color: var(--gray-color);
+        font-size: 0.9rem;
+    }
+
+    .duration i {
+        color: var(--primary-color);
+    }
+
+    .ride-date {
+        text-align: center;
+    }
+
+    .ride-date .date {
+        font-weight: 500;
+    }
+
+    .ride-date .time {
+        font-size: 0.9rem;
+        color: var(--gray-color);
+    }
+
+    .ride-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+
+    .detail i {
+        color: var(--primary-color);
+    }
+
+    .ride-passengers {
+        margin-bottom: 20px;
+    }
+
+    .ride-passengers h4 {
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    .passengers-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .passenger {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;
+        border-radius: var(--border-radius);
+        background-color: var(--light-color);
+    }
+
+    .passenger img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .passenger-info {
+        flex: 1;
+    }
+
+    .passenger-info .name {
+        font-weight: 500;
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.8rem;
+        color: var(--warning-color);
+    }
+
+    .rating .reviews {
+        color: var(--gray-color);
+    }
+
+    .message-btn {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+        transition: var(--transition);
+    }
+
+    .message-btn:hover {
+        color: var(--primary-dark);
+    }
+
+    .ride-actions {
+        display: flex;
+        gap: 15px;
+    }
+
+    .ride-actions .btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    /* Bookings List */
+    .bookings-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .booking-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 20px;
+        box-shadow: var(--box-shadow);
+    }
+
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .status-badge {
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 4px;
+    }
+
+    .status-badge.upcoming {
+        background-color: rgba(252, 210, 15, 0.1);
+        color: var(--secondary-color);
+    }
+
+    .status-badge.pending {
+        background-color: rgba(0, 107, 61, 0.1);
+        color: var(--accent-color);
+    }
+
+    .status-badge.cancelled {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: var(--danger-color);
+    }
+
+    .booking-header .date {
+        font-size: 0.9rem;
+        color: var(--gray-color);
+    }
+
+    .booking-details {
+        margin-bottom: 20px;
+    }
+
+    .route {
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .route .time {
+        font-size: 0.9rem;
+        color: var(--gray-color);
+        margin-top: 5px;
+    }
+
+    .driver-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 15px 0;
+    }
+
+    .driver-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .driver-info .name {
+        font-weight: 500;
+    }
+
+    .booking-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        font-size: 0.9rem;
+    }
+
+    .booking-info i {
+        color: var(--primary-color);
+        margin-right: 5px;
+    }
+
+    .booking-actions {
+        display: flex;
+        gap: 15px;
+    }
+
+    .booking-actions .btn {
+        flex: 1;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .rides-tabs {
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .ride-details {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .ride-actions,
+        .booking-actions {
+            flex-direction: column;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+{% if messages %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        {% for message in messages %}
+        <div class="col-md-8">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<!-- Main Content -->
+<main class="my-rides-container">
+    <div class="container">
+        <div class="page-header">
+            <h1 style="padding-top: 50px;">My Rides and Passengers</h1>
+            <p>Manage your rides and view passengers</p>
+            <div class="ghana-flag">
+                <span class="red"></span>
+                <span class="gold"></span>
+                <span class="green"></span>
+                <span class="star">★</span>
+            </div>
+        </div>
+
+        <div class="rides-tabs">
+            <button class="tab-btn active" data-tab="passengers"> All Bookings </button>
+            <button class="tab-btn" data-tab="bookings">Passengers</button>
+        </div>
+
+        <!-- All Bookings Section -->
+        <div class="rides-section active" id="passengers">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> All Posted Rides</h2>
+                <a href="{% url 'offer_ride' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Offer New Ride
+                </a>
+            </div>
+
+            {% if ridesposted %}
+            <div class="rides-list">
+                {% for ride_data in ridesposted %}
+                <div class="ride-card driver">
+
+                    <div class="ride-header">
+                        <div class="route">
+                            <div class="departure">
+                                <span class="city">{{ ride_data.departure }}</span>
+                            </div>
+
+                            <div class="duration">
+                                <i class="fas fa-arrow-right"></i>
+                                <span>To</span>
+                            </div>
+                            <div class="arrival">
+                                <span class="city">{{ ride_data.destination }}</span>
+                            </div>
+                        </div>
+                        <div class="ride-date">
+                            <span class="date">{{ ride_data.departure_date }}</span>
+                            <span class="time">{{ ride_data.departure_time }}</span>
+                        </div>
+                    </div>
+
+                    <div class="ride-status upcoming">
+                        <i class="fas fa-car"></i> Your Ride
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        <i class="fas fa-car"> {{ride_data.car_model}}</i>
+                    </div>
+                    <div class="d-flex justify-content-end mb-4">
+                        {% if ride_data.ride_status == "active"%}
+                        <span class="fw-bold text-success  ">Active</span>
+                        {% elif ride_data.ride_status == "cancelled" %}
+                        <span class="fw-bold text-danger ">Cancelled</span>
+                        {%endif%}
+                    </div>
+
+
+                    <div class="ride-details">
+                        <div class="detail">
+                            <i class="fas fa-user-friends"></i>
+                            <span>{{ ride_data.bookings.count }}/{{ ride_data.available_seats }} seats booked</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>GH₵{{ ride_data.price_per_seat }} per seat</span>
+                        </div>
+                        <!-- <div class="detail">
+                                <i class="fas fa-car"></i>
+                                <span>{{ ride_data.car_model }}</span>
+                            </div> -->
+                    </div>
+
+                    <!-- {% if all_bookings %}
+                        <div class="ride-passengers">
+                            {% for passenger in all_bookings %}
+                            <h4>Passengers ({{ ride_data.bookings.count }}):</h4>
+                            <div class="passengers-list">
+                            
+                                <div class="passenger">
+                                     
+                                    <img src="{% static 'images/pic.jpg' %}" alt="{{ passenger.booked_by.username }}">
+                                    <div class="passenger-info">
+                                        <span class="name">{{ passenger.booked_by.username }}</span> 
+                                        <div class="booking-info">
+                                            <span><i class="fas fa-calendar"></i> Booked on {{ passenger.booked_at|date:"M d, Y" }}</span>
+                                            <span class="status-badge {% if passenger.status == 'active' %}upcoming{% else %}cancelled{% endif %}">
+                                                {{ passenger.get_status_display }} 
+                                            </span>  
+                                        </div> 
+                                    </div>     
+                                    
+                                </div>
+                                 
+                            </div>
+                            {%endfor%}
+                        </div>
+                        {%endif%} -->
+
+                    <div class="ride-actions">
+                        {% if ride_data.ride_status == "active" %}
+                        <a href="#" class="btn btn-outline cancel-btn" data-url="{% url 'cancelRide' ride_data.id %}">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        {% elif ride_data.ride_status == "cancelled" %}
+                        <a href="{% url 'activeRide' ride_data.id  %}" class="btn btn-outline">
+                            <i class="fas fa-times"></i> Activate
+                        </a>
+                        {%endif%}
+                        <a href="{% url 'edit_ride' ride_data.id %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+
+                        <a href="#" class="btn btn-primary delete-btn"
+                            data-url="{% url 'deletePostRide' ride_data.id %}">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> You Have not post any ride yet.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Passengers by Ride Section -->
+
+        <div class="rides-section" id="bookings">
+            <div class="section-header">
+                <h2><i class="fas fa-list"></i> Passengers</h2>
+            </div>
+
+            {% if all_bookings %}
+            <div class="bookings-list">
+                {% for booking in all_bookings %}
+                <div class="booking-card">
+                    <div class="booking-header">
+                        <span
+                            class="status-badge {% if booking.status == 'active' %}upcoming{% else %}cancelled{% endif %}">
+                            {{ booking.status }}
+                        </span>
+
+                        <span class="date">Booked on {{ booking.booked_at|date:"M d, Y" }}</span>
+                    </div>
+
+                    <div class="booking-details">
+                        <div class="route">
+                            {{ booking.ride.departure }} to {{ booking.ride.destination }}
+                            <div class="time">
+                                {{ booking.ride.departure_date }} at {{ booking.ride.departure_time }}
+                            </div>
+                        </div>
+
+                        <div class="booking-info">
+                            <span>{% if booking.booked_by.profile_pic %}
+                                <img src="{{ booking.booked_by.profile_pic}}" alt="Profile" width="32" height="32"
+                                    class="rounded-circle me-2"> 
+                                {% else %} 
+                                <div class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+                                    style="width: 32px; height: 32px;"> 
+                                    {{ booking.booked_by.username|first|upper }}
+                                </div> 
+                                {% endif %} {{booking.booked_by.username}}
+                            </span>
+                            <span><i class="fas fa-money-bill-wave"></i> GH₵{{ booking.ride.price_per_seat }} per
+                                seat</span> 
+                            <span><i class="fas fa-car"></i> {{ booking.ride.car_model }}</span>
+                        </div>
+                    </div>
+
+                    <!-- <div class="booking-actions">
+                        <a href="" class="btn btn-outline">
+                            <i class="fas fa-comment-dots"></i> Message
+                        </a>
+                        <a href="" class="btn btn-primary">
+                            <i class="fas fa-info-circle"></i> View Ride
+                        </a>
+                    </div> -->
+
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No passenger has booked your ride yet. 😛
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Tab switching functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const rideSections = document.querySelectorAll('.rides-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                // Remove active class from all buttons and sections
+                tabBtns.forEach(b => b.classList.remove('active'));
+                rideSections.forEach(s => s.classList.remove('active'));
+
+                // Add active class to clicked button and corresponding section
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    });
+</script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Cancel confirmation
+        document.querySelectorAll('.cancel-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const url = this.getAttribute('data-url');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to cancel this ride?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, cancel it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+
+        // Delete confirmation
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const url = this.getAttribute('data-url');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This action cannot be undone!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{% endblock %}

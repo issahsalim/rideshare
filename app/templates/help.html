@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GhanaRide | Affordable Carpooling in Ghana</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    /* Your full custom style code remains untouched here... */
+  </style>
+</head>
+<body>
+
+<!-- ✅ Navigation Bar -->
+<nav class="navbar">
+  <div class="container">
+    <a href="{% url 'home' %}" class="logo">
+      <img src="{% static 'images/logo.png' %}" alt="Logo" />
+      <span>RideShare</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="{% url 'find_ride' %}" class="nav-link">Find a ride</a>
+      <a href="{% url 'offer_ride' %}" class="nav-link">Offer a ride</a>
+      <a href="{% url 'how_it_work' %}" class="nav-link">How it works</a>
+      <a href="{% url 'safety' %}" class="nav-link">Safety</a>
+      <a href="{% url 'help' %}" class="nav-link">Help</a>
+    </div>
+
+    <div class="auth-buttons">
+      <a href="{% url 'login' %}" class="btn btn-outline">Log in</a>
+      <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+    </div>
+
+    <button class="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ✅ Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Travel Smarter with <span>Ghana</span>Ride</h1>
+    <p>Share rides. Save money. Connect with fellow travelers across Ghana.</p>
+
+    <!-- ✅ Search Box -->
+    <div class="search-box">
+      <input type="text" class="search-input" placeholder="From (e.g., Accra)">
+      <input type="text" class="search-input" placeholder="To (e.g., Kumasi)">
+      <input type="date" class="search-input" placeholder="Date">
+      <button class="search-btn"><i class="fas fa-search"></i> Find Rides</button>
+    </div>
+
+    <!-- ✅ Stats -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <h3>10,000+</h3>
+        <p>Rides Shared</p>
+      </div>
+      <div class="stat-item">
+        <h3>60%</h3>
+        <p>Cheaper Than Buses</p>
+      </div>
+      <div class="stat-item">
+        <h3>50+</h3>
+        <p>Cities Covered</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ✅ Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>RideShare Ghana</h3>
+        <p>Affordable carpooling for Ghanaians. Travel between cities for less by sharing rides with verified drivers.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="{% url 'about' %}">About us</a></li>
+          <li><a href="{% url 'how_it_work' %}">How it works</a></li>
+          <li><a href="{% url 'offer_ride' %}">Offer a ride</a></li>
+          <li><a href="{% url 'safety' %}">Safety</a></li>
+          <li><a href="{% url 'help' %}">Help Center</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Popular Routes</h3>
+        <ul>
+          <li><a href="#">Accra to Kumasi</a></li>
+          <li><a href="#">Kumasi to Tamale</a></li>
+          <li><a href="#">Accra to Cape Coast</a></li>
+          <li><a href="#">Takoradi to Kumasi</a></li>
+          <li><a href="#">Accra to Ho</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <ul>
+          <li><i class="fas fa-envelope"></i> info@ridesharegh.com</li>
+          <li><i class="fas fa-phone"></i> +233 24 123 4567</li>
+          <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2023 RideShare Ghana. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ✅ Script -->
+<script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>

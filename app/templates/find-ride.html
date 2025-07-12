@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Ride | RideShare Ghana</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/find-a-ride.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+<style>
+    @media (max-width: 992px) {
+    .search-form,.search-box{
+        display: none;
+    }
+}
+
+</style>
+ 
+<body>
+    <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+        <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
+          class="d-inline-block align-text-top me-2">
+        <span>RideShare</span>
+      </a>
+
+      <!-- Hamburger for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_rides' %}">My Ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'safety' %}">Safety</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="{% url 'help' %}">Help</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
+          </li>
+        </ul>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown ms-auto">
+          <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
+              class="rounded-circle me-2"> 
+            {% else %}
+            <div
+              class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+              style="width: 32px; height: 32px;">
+              {{ request.user.username|first|upper }}
+            </div> 
+            {% endif %}
+            <span class="d-none d-lg-inline">{{ request.user.username }}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+            <li><a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="fas fa-user-edit me-2"></i>My profile 
+              </a></li>
+            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+              </a></li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a></li>
+          </ul>
+        </div>
+
+        {% else %}
+        <!-- Auth Buttons -->
+        <div class="d-flex ms-auto">
+          <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
+          <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+    <style>
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+
+    {% if messages %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            {% for message in messages %}
+            <div class="col-md-8">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-header">
+                <h1>Find Rides Across Ghana</h1>
+                <p>Travel between cities affordably with trusted drivers</p>
+            </div>
+
+            <div class="search-box ">
+                <form method="get" class="search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="from">From</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="fromInput" name="from" placeholder="Accra, Kumasi, etc.">
+                            </div>
+                        </div>
+
+                        <button class="swap-btn" type="button">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+
+                        <div class="form-group">
+                            <label for="to">To</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="toInput" name="to" placeholder="Kumasi, Tamale, etc.">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <div class="input-with-icon">
+                                <i class="far fa-calendar-alt"></i>
+                                <input type="date" id="date" name="date">
+                            </div>
+                        </div>
+
+                        <!--  -->
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary" id="swapBtn">
+                                <i class="fas fa-search"></i> Search Rides
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="quick-search">
+                <h3>Popular Routes:</h3>
+                <div class="route-tags">
+                    <a href="#" class="route-tag">Accra → Kumasi</a>
+                    <a href="#" class="route-tag">Kumasi → Tamale</a>
+                    <a href="#" class="route-tag">Accra → Cape Coast</a>
+                    <a href="#" class="route-tag">Takoradi → Kumasi</a>
+                    <a href="#" class="route-tag">Accra → Ho</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="container">
+
+            <h2>Available Rides</h2>
+
+            <!-- <div class="results-header">
+                <div class="sort-filter">
+                    <div class="filter-toggle">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Filters</span>
+                    </div>
+                    <div class="sort-options">
+                        <label>Sort by:</label>
+                        <select id="sort-by">
+                            <option value="price-asc">Price (Low to High)</option>
+                            <option value="price-desc">Price (High to Low)</option>
+                            <option value="departure-asc">Departure (Earliest)</option>
+                            <option value="departure-desc">Departure (Latest)</option>
+                            <option value="rating">Best Rated</option>
+                        </select>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="results-grid original_view">
+                {% for rides in allrides %}
+                <!-- Ride Card 1 -->
+                <div class="ride-card">
+                    <!-- Top Section with Driver Info and Status -->
+                    <div class="ride-header">
+                        <div class="driver-info">
+                            {% if rides.driver.profile_pic %}
+                            <img src="{{rides.driver.profile_pic.url}}" alt="Driver" class="driver-photo">
+                            {%else%}
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+                                style="width: 60px; height: 60px; font-size: 24px;">
+                                {{ rides.driver.username|first|upper }}
+                            </div>
+                            {%endif%}
+                            <div>
+                                <h3>{{rides.driver}}</h3>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>4.9</span>
+                                    <span class="reviews">(42 reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="status-badge">
+                            {% if rides.ride_status == "active" %}
+                            <span class="active fw-bold text-success"  >Active</span>
+                            {% elif rides.ride_status == "cancelled" %}
+                            <span class="cancelled fw-bold text-danger" >Cancelled</span>
+                            {%endif%}
+                        </div>
+
+                        <div class="ride-price">
+                            <span class="price">GH₵{{rides.price_per_seat}}</span>
+                            <span class="per-person">per person</span>
+                        </div>
+                    </div>
+
+                    <!-- Car Image Section -->
+                    <div class="car-image-container d-flex justify-content-center mb-4">
+                        <img src="{{ rides.car_photo.url}}" alt="{{ rides.car_model }}" class="car-image">
+                    </div>
+
+                    <!-- Ride Details Section -->
+                    <div class="ride-details">
+                        <div class="route">
+                            <div class="departure">
+                                <span class="time">on {{rides.departure_date}} at {{rides.departure_time}}</span>
+                                <span class="place">{{rides.departure}}</span>
+                            </div>
+                            <div class="duration">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="arrival">
+                                <span class="place">{{rides.destination}}</span>
+                            </div>
+                        </div>
+
+                        <div class="car-specs">
+                            <div class="car-info">
+                                <i class="fas fa-car"></i>
+                                <span>{{rides.car_model}} • {{rides.car_year}}</span>
+                            </div>
+
+                            <div class="seats-available">
+                                <i class="fas fa-user-friends"></i>
+                                <span>{{rides.available_seats}} seats left</span>
+                            </div>
+
+                            <div class="amenities">
+                                <i class="fas fa-bolt"></i>
+                                <span>{{rides.amenities|join:" • "|default:"Standard"}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="ride-actions">
+                        <!-- <button class="btn btn-outline">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button> -->
+                        <a href="#" class="btn btn-primary book-btn" data-url="{% url 'bookbtn' rides.id %}">
+                            <i class="fas fa-ticket-alt"></i> Book Now
+                        </a>
+                    </div>
+                </div>
+                {%empty%}
+                <h2 class="text-center text-bold fs-2">No available rides </h2>
+                {% endfor %}
+
+            </div>
+
+
+            {% if searchFound %}
+            <style>
+                .original_view {
+                    display: none;
+                }
+            </style>
+            <div class="results-grid">
+                {% for rides in searchFound %}
+                <h3 class="text-center"> Search result </h3>
+
+                <div class="ride-card">
+                    <div class="ride-header">
+                        <div class="driver-info">
+                            {% if rides.driver.profile_pic %}
+                            <img src="{{rides.driver.profile_pic.url}}" alt="Driver" class="driver-photo">
+                            {%else%}
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+                                style="width: 60px; height: 60px; font-size: 24px;">
+                                {{ rides.driver.username|first|upper }}
+                            </div>
+                            {%endif%}
+                            <div>
+                                <h3>{{rides.driver}}</h3>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>4.9</span>
+                                    <span class="reviews">(42 reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+
+                            {% if rides.ride_status == "active" %}
+                            <span style="color: green; font-weight: bold;">Active</span>
+                            {% elif rides.ride_status == "cancelled" %}
+                            <span style="color: red; font-weight: bold;">Cancelled</span>
+                            {%endif%}
+                        </div> 
+                        <div class="ride-price">
+                            <span class="price">{{rides.price_per_seat}}</span>
+                            <span class="per-person">per person</span>
+                        </div>
+                    </div>
+
+                    <div class="ride-details">
+                        <div class="route">
+                            <div class="departure">
+                                <span class="time">on {{rides.departure_date}} at {{rides.departure_time}}</span>
+                                <span class="place">{{rides.departure}}</span>
+                            </div>
+                            <div class="duration">
+                                <i class="fas fa-arrow-right"></i>
+
+                            </div>
+                            <div class="arrival">
+                                <span class="place">{{rides.destination}}</span>
+                            </div>
+                        </div>
+
+                        <div class="car-info">
+                            <i class="fas fa-car"></i>
+                            <span>{{rides.car_model}} • {{rides.car_year}} • {{rides.amenities}}</span>
+                        </div>
+
+                        <div class="seats-available">
+                            <i class="fas fa-user-friends"></i>
+                            <span>{{rides.available_seats}}</span>
+                        </div>
+                    </div>
+
+                    <div class="ride-actions">
+                        <!-- <button class="btn btn-outline">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button> -->
+                        <a href="#" class="btn btn-primary book-btn" data-url="{% url 'bookbtn' rides.id %}">
+                            <i class="fas fa-ticket-alt"></i> Book Now
+                        </a>
+                    </div>
+                </div>
+
+                {%empty%}
+                <h2 class="text-center text-bold fs-2">No available rides </h2>
+                {% endfor %}
+
+            </div>
+            {%endif%}
+        </div>
+    </section>
+
+    <!-- Filters Panel (Hidden by default) -->
+    <div class="filters-panel">
+        <div class="filters-header">
+            <h3>Filter Rides</h3>
+            <button class="close-filters">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="filter-group">
+            <h4>Price Range (GH₵)</h4>
+            <div class="price-range">
+                <input type="range" min="20" max="200" value="100" class="slider" id="price-range">
+                <div class="range-values">
+                    <span>20</span>
+                    <span>200</span>
+                </div>
+                <div class="selected-range">
+                    Selected: Up to GH₵ <span id="selected-price">100</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Departure Time</h4>
+            <div class="time-filters">
+                <label class="time-filter">
+                    <input type="checkbox" checked>
+                    <span class="checkmark"></span>
+                    Morning (5AM - 12PM)
+                </label>
+                <label class="time-filter">
+                    <input type="checkbox" checked>
+                    <span class="checkmark"></span>
+                    Afternoon (12PM - 5PM)
+                </label>
+                <label class="time-filter">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    Evening (5PM - 10PM)
+                </label>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Car Type</h4>
+            <div class="car-type-filters">
+                <label class="car-type-filter">
+                    <input type="checkbox" checked>
+                    <span class="checkmark"></span>
+                    <i class="fas fa-car"></i> Sedan
+                </label>
+                <label class="car-type-filter">
+                    <input type="checkbox" checked>
+                    <span class="checkmark"></span>
+                    <i class="fas fa-truck"></i> SUV
+                </label>
+                <label class="car-type-filter">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <i class="fas fa-van-shuttle"></i> Minivan
+                </label>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Amenities</h4>
+            <div class="amenity-filters">
+                <label class="amenity-filter">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <i class="fas fa-snowflake"></i> Air Conditioning
+                </label>
+                <label class="amenity-filter">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <i class="fas fa-wifi"></i> WiFi
+                </label>
+                <label class="amenity-filter">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <i class="fas fa-smoking-ban"></i> Non-smoking
+                </label>
+            </div>
+        </div>
+
+        <div class="filter-actions">
+            <button class="btn btn-outline reset-filters">
+                Reset All
+            </button>
+            <button class="btn btn-primary apply-filters">
+                Apply Filters
+            </button>
+        </div>
+    </div>
+    <div class="filters-overlay"></div>
+
+    <!-- Map View Toggle -->
+    <!-- <div class="map-view-toggle">
+        <button class="btn btn-outline active">
+            <i class="fas fa-list"></i> List View
+        </button>
+        <button class="btn btn-outline">
+            <i class="fas fa-map-marked-alt"></i> Map View
+        </button>
+    </div> -->
+
+    <!-- Footer -->
+       <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>RideShare Ghana</h3>
+                    <p>Affordable carpooling for Ghanaians. Travel between cities for less by sharing rides with verified drivers.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="{% url 'about' %}">About us</a></li>
+                        <li><a href="{% url 'how_it_work' %}">How it works</a></li>
+                        <li><a href="{% url 'offer_ride' %}">Offer a ride</a></li>
+                        <li><a href="{% url 'safety' %}">Safety</a></li>
+                        <!-- <li><a href=""></a></li> -->
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Popular Routes</h3>
+                    <ul>
+                        <li><a href="#">Accra to Kumasi</a></li>
+                        <li><a href="#">Kumasi to Tamale</a></li>
+                        <li><a href="#">Accra to Cape Coast</a></li>
+                        <li><a href="#">Takoradi to Kumasi</a></li>
+                        <li><a href="#">Accra to Ho</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@ridesharegh.com</li>
+                        <li><i class="fas fa-phone"></i> +233 24 123 4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 RideShare Ghana. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/find-a-ride.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.book-btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const url = this.dataset.url;
+
+                Swal.fire({
+                    title: 'Confirm Booking?',
+                    text: 'Do you want to book this ride now?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Book it!',
+                    cancelButtonText: 'No, Cancel',
+                    confirmButtonColor: '#0d6efd',
+                    cancelButtonColor: '#6c757d'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+
+
+        swapBtn.addEventListener('click', function () {
+            const swapBtn = document.getElementById('swapBtn');
+            const fromInput = document.getElementById('fromInput');
+            const toInput = document.getElementById('toInput');
+            const tempValue = fromInput.value;
+
+            fromInput.value = toInput.value;
+            toInput.value = tempValue;
+
+        });
+    });
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</html>

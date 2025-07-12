@@ -1,0 +1,356 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="assets/images/favicon.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
+          class="d-inline-block align-text-top me-2">
+        <span>RideShare</span>
+      </a>
+
+      <!-- Hamburger for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_rides' %}">My Ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'safety' %}">Safety</a>
+          </li>
+          <!--  -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
+          </li>
+        </ul>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown ms-auto">
+          <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
+              class="rounded-circle me-2">
+            {% else %}
+            <div
+              class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+              style="width: 32px; height: 32px;">
+              {{ request.user.username|first|upper }}
+            </div>
+            {% endif %}
+            <span class="d-none d-lg-inline">{{ request.user.username }}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+            <li><a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="fas fa-user-edit me-2"></i>My profile 
+              </a></li>
+            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+              </a></li>
+
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a></li>
+          </ul>
+        </div>
+
+        {% else %}
+        <!-- Auth Buttons -->
+        <div class="d-flex ms-auto">
+          <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
+          <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="ghana-flag-decoration">
+                    <span class="red"></span>
+                    <span class="gold"></span>
+                    <span class="green"></span>
+                    <span class="star">★</span>
+                </div>
+                <h1>Share Rides Across <span class="ghana-text">Ghana</span></h1>
+                <p class="subtitle">Affordable travel between cities • Trusted community • Pay in cash</p>
+
+                <!-- Search box remains same but we'll style it differently -->
+            </div>
+        </div>
+        <div class="hero-pattern"></div>
+    </section>
+
+
+    <!-- Popular Routes Section -->
+    <section class="popular-routes">
+        <div class="container">
+            <h2>Popular Routes in Ghana</h2>
+            <p>Travel between Ghana's major cities affordably</p>
+
+            <div class="routes-grid">
+                <a href="#" class="route-card" style="cursor: auto;">
+                    <div class="cities">
+                        <span>Accra</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span>Kumasi</span>
+                    </div>
+                    <div class="details">
+                        <span><i class="fas fa-users"></i> 15+ rides daily</span>
+                        <!-- <span>From GH₵ 50</span> -->
+                    </div>
+                </a>
+
+                <a href="#" class="route-card" style="cursor: auto;">
+                    <div class="cities">
+                        <span>Kumasi</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span>Tamale</span>
+                    </div>
+                    <div class="details">
+                        <span><i class="fas fa-users"></i> 8+ rides daily</span>
+                        <!-- <span>From GH₵ 80</span> -->
+                    </div>
+                </a>
+
+                <a href="#" class="route-card" style="cursor: auto;">
+                    <div class="cities">
+                        <span>Accra</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span>Cape Coast</span>
+                    </div>
+                    <div class="details">
+                        <span><i class="fas fa-users"></i> 12+ rides daily</span>
+                        <!-- <span>From GH₵ 40</span> -->
+                    </div>
+                </a>
+
+                <a href="#" class="route-card" style="cursor: auto;">
+                    <div class="cities">
+                        <span>Takoradi</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span>Kumasi</span>
+                    </div>
+                    <div class="details">
+                        <span><i class="fas fa-users"></i> 5+ rides daily</span>
+                        <!-- <span>From GH₵ 60</span> -->
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2>How RideShare Works</h2>
+            <p>Simple steps to share your ride or find one</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <i class="fas fa-search"></i>
+                    <h3>Search</h3>
+                    <p>Find a ride going your way by entering your departure and arrival cities.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <i class="fas fa-car"></i>
+                    <h3>Book</h3>
+                    <p>Choose the ride that suits you best and send a booking request.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Pay</h3>
+                    <p>Pay the driver in cash when you meet (no in-app payments).</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <i class="fas fa-road"></i>
+                    <h3>Travel</h3>
+                    <p>Meet your driver and enjoy your trip across Ghana!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-us">
+        <div class="container">
+            <div class="content">
+                <h2>Why Choose RideShare Ghana</h2>
+                <p>Experience the best of carpooling in Ghana with these benefits</p>
+
+                <div class="benefits">
+                    <div class="benefit">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Affordable</h3>
+                        <p>Save up to 60% compared to traditional transport options.</p>
+                    </div>
+
+                    <div class="benefit">
+                        <i class="fas fa-smile"></i>
+                        <h3>Comfortable</h3>
+                        <p>Travel in private cars with verified drivers.</p>
+                    </div>
+
+                    <div class="benefit">
+                        <i class="fas fa-leaf"></i>
+                        <h3>Eco-friendly</h3>
+                        <p>Reduce carbon emissions by sharing rides.</p>
+                    </div>
+
+                    <div class="benefit">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Safe</h3>
+                        <p>Verified profiles and ratings for all members.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image">
+                <img src="{% static 'images/01.jpg' %}" alt="Happy riders">
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>What Our Users Say</h2>
+            <p>Real experiences from the RideShare Ghana community</p>
+
+            <div class="testimonial-slider">
+                <div class="testimonial active">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"I travel between Accra and Kumasi every month for work. RideShare has saved me so much money
+                        compared to STC buses. The drivers are always professional and the rides comfortable."</p>
+                    <div class="user">
+                        <img src="{%static 'images/user1.jpg' %}" alt="Kwame">
+                        <div>
+                            <h4>Kwame O.</h4>
+                            <span>Accra → Kumasi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p>"As a student, I can't afford expensive transport. RideShare has been a lifesaver for my trips to
+                        visit family in Tamale. I've even made friends with some regular drivers!"</p>
+                    <div class="user">
+                        <img src="{% static 'images/user2.jpg' %}" alt="Ama">
+                        <div>
+                            <h4>Ama B.</h4>
+                            <span>Kumasi → Tamale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"I drive between Takoradi and Accra every weekend to visit my family. With RideShare, I can
+                        offset my fuel costs by taking passengers. It's a win-win for everyone!"</p>
+                    <div class="user">
+                        <img src="{% static 'images/user3.jpg' %}" alt="Yaw">
+                        <div>
+                            <h4>Yaw M.</h4>
+                            <span>Driver</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slider-controls">
+                    <button class="prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <button class="next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to travel across Ghana?</h2>
+                <p>Join thousands of Ghanaians who are already saving money and making new connections on the road.</p>
+                <div class="cta-buttons">
+                    <a href="{% url 'find_ride' %}" class="btn btn-primary">Find a ride</a>
+                    <a href="{% url 'offer_ride' %}" class="btn btn-outline">Offer a ride</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety | RideShare Ghana</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/safety.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+ <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
+          class="d-inline-block align-text-top me-2">
+        <span>RideShare</span>
+      </a>
+
+      <!-- Hamburger for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_rides' %}">My Ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'safety' %}">Safety</a>
+          </li>
+          <!--  -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
+          </li>
+        </ul>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown ms-auto">
+          <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
+              class="rounded-circle me-2">
+            {% else %}
+            <div
+              class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+              style="width: 32px; height: 32px;">
+              {{ request.user.username|first|upper }}
+            </div>
+            {% endif %}
+            <span class="d-none d-lg-inline">{{ request.user.username }}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+            <li><a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="fas fa-user-edit me-2"></i>My profile 
+              </a></li>
+            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+              </a></li>
+
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a></li>
+          </ul>
+        </div>
+
+        {% else %}
+        <!-- Auth Buttons -->
+        <div class="d-flex ms-auto">
+          <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
+          <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  
+    <!-- Main Content -->
+    <main class="safety-page">
+        <!-- Hero Section -->
+        <section class="safety-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Your Safety is Our Priority</h1>
+                    <p class="subtitle">How we protect you on every journey across Ghana</p>
+                    <div class="ghana-flag">
+                        <span class="red"></span>
+                        <span class="gold"></span>
+                        <span class="green"></span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="assets/Images/03.jpg" alt="Safe travel in Ghana">
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety Features Section -->
+        <section class="safety-features">
+            <div class="container">
+                <h2 class="section-title">Our Safety Features</h2>
+                <p class="section-subtitle">Built-in protections for every RideShare Ghana journey</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <h3>Verified Profiles</h3>
+                        <p>All drivers and passengers must verify their identity with government-issued ID before using
+                            our platform.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>Rating System</h3>
+                        <p>After each trip, both drivers and passengers rate each other to maintain community standards.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3>Vehicle Checks</h3>
+                        <p>Drivers must provide valid vehicle registration and insurance documents.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h3>Real-Time Sharing</h3>
+                        <p>Share your trip details with trusted contacts for added security.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>In-App Messaging</h3>
+                        <p>Communicate through our platform without sharing personal phone numbers.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <h3>24/7 Support</h3>
+                        <p>Access our support team anytime for help with safety concerns.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety Tips Section -->
+        <section class="safety-tips">
+            <div class="container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="passenger-tips">Passenger Tips</button>
+                    <button class="tab-btn" data-tab="driver-tips">Driver Tips</button>
+                </div>
+
+                <!-- Passenger Tips -->
+                <div class="tab-content active" id="passenger-tips">
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <div class="tip-number">1</div>
+                            <h3>Verify Your Driver</h3>
+                            <p>Before getting in the car, confirm the driver's name, photo, and vehicle details match
+                                what's in the app.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">2</div>
+                            <h3>Check Ratings</h3>
+                            <p>Only ride with drivers who have good ratings (4.0 or higher) and read recent reviews.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">3</div>
+                            <h3>Meet in Public</h3>
+                            <p>Choose well-lit, public meeting points like petrol stations or shopping centers.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">4</div>
+                            <h3>Share Your Trip</h3>
+                            <p>Use the app to share your ride details and real-time location with family or friends.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">5</div>
+                            <h3>Sit Behind the Driver</h3>
+                            <p>For added security, choose the rear seat behind the driver when possible.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">6</div>
+                            <h3>Trust Your Instincts</h3>
+                            <p>If something doesn't feel right, don't get in the car. Cancel and report any concerns.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Driver Tips -->
+                <div class="tab-content" id="driver-tips">
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <div class="tip-number">1</div>
+                            <h3>Verify Passengers</h3>
+                            <p>Check passenger profiles and ratings before accepting bookings.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">2</div>
+                            <h3>Meet in Public Places</h3>
+                            <p>Arrange pickups at visible locations like shopping centers or major landmarks.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">3</div>
+                            <h3>Set Clear Expectations</h3>
+                            <p>Communicate pickup points, luggage limits, and payment amount before the trip.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">4</div>
+                            <h3>Keep Valuables Secure</h3>
+                            <p>Store your personal belongings out of sight in the trunk or glove compartment.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">5</div>
+                            <h3>Maintain Your Vehicle</h3>
+                            <p>Ensure your car is in good condition with working seatbelts for all passengers.</p>
+                        </div>
+
+                        <div class="tip-card">
+                            <div class="tip-number">6</div>
+                            <h3>Cash Handling</h3>
+                            <p>Confirm payment amount before departure and avoid displaying large sums of money.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Emergency Section -->
+        <section class="emergency-section">
+            <div class="container">
+                <h2 class="section-title">Emergency Assistance</h2>
+                <p class="section-subtitle">We're here to help when you need it most</p>
+
+                <div class="emergency-cards">
+                    <div class="emergency-card">
+                        <div class="emergency-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <h3>Emergency Contacts</h3>
+                        <ul class="contact-list">
+                            <li><strong>RideShare Safety Line:</strong> +233 24 123 4567</li>
+                            <li><strong>Ghana Police:</strong> 191 or 18555</li>
+                            <li><strong>National Ambulance:</strong> 193</li>
+                            <li><strong>Fire Service:</strong> 192</li>
+                        </ul>
+                    </div>
+
+                    <div class="emergency-card">
+                        <div class="emergency-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>In Case of Emergency</h3>
+                        <ol class="steps-list">
+                            <li>Ensure your immediate safety first</li>
+                            <li>Call emergency services if needed</li>
+                            <li>Contact RideShare Safety Line</li>
+                            <li>Report the incident through the app</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="emergency-cta">
+                    <a href="contact.html" class="btn btn-outline">
+                        <i class="fas fa-headset"></i> Contact Safety Team
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Guidelines -->
+        <section class="community-guidelines">
+            <div class="container">
+                <h2 class="section-title">Community Guidelines</h2>
+                <p class="section-subtitle">Our standards for a safe and respectful community</p>
+
+                <div class="guidelines-grid">
+                    <div class="guideline-card">
+                        <h3><i class="fas fa-user-shield"></i> Respect Everyone</h3>
+                        <p>Treat all community members with respect, regardless of gender, ethnicity, or background.</p>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><i class="fas fa-ban"></i> Zero Tolerance</h3>
+                        <p>No harassment, discrimination, or inappropriate behavior will be tolerated.</p>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><i class="fas fa-car-side"></i> Vehicle Standards</h3>
+                        <p>Drivers must maintain clean, roadworthy vehicles with working seatbelts.</p>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><i class="fas fa-money-bill-wave"></i> Transparent Pricing</h3>
+                        <p>Agree on payment amounts before departure to avoid disputes.</p>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><i class="fas fa-smoking-ban"></i> No Smoking</h3>
+                        <p>Respect non-smoking preferences in vehicles unless agreed otherwise.</p>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><i class="fas fa-volume-mute"></i> Respect Privacy</h3>
+                        <p>Don't ask personal questions or share others' information without consent.</p>
+                    </div>
+                </div>
+
+                <div class="reporting-section">
+                    <h3>Reporting Safety Concerns</h3>
+                    <p>If you experience or witness any behavior that violates our guidelines:</p>
+                    <ol>
+                        <li>Contact our safety team immediately</li>
+                        <li>Provide details through the app's reporting feature</li>
+                        <li>Submit any relevant photos or documentation</li>
+                    </ol>
+                    <p>All reports are confidential and investigated promptly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety FAQ -->
+        <section class="safety-faq">
+            <div class="container">
+                <h2 class="section-title">Safety FAQs</h2>
+
+                <div class="faq-grid">
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h3>How are drivers vetted on RideShare Ghana?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>All drivers must submit a valid driver's license, vehicle registration, and insurance
+                                documents. We verify these with the appropriate authorities and conduct background
+                                checks before approving any driver.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h3>What should I do if I feel unsafe during a ride?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>If you feel unsafe, ask the driver to stop at the nearest public place and exit the
+                                vehicle. Immediately contact our 24/7 safety line (+233 24 123 4567) to report the
+                                incident and request assistance.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h3>How does RideShare Ghana handle cash payments safely?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We recommend agreeing on the payment amount before the trip begins. Count money
+                                discreetly and avoid displaying large sums. Drivers should keep earnings secured and out
+                                of sight during trips.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h3>What COVID-19 safety measures are in place?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We encourage drivers to regularly sanitize their vehicles and provide hand sanitizer.
+                                Both drivers and passengers may request mask-wearing during trips. Vehicles should be
+                                well-ventilated when possible.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h3>Can I request a driver of a specific gender?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>While we don't currently offer gender-based matching, you can view driver profiles before
+                                booking and choose based on ratings and reviews that make you feel most comfortable.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-question">
+                            <h3>What happens if a driver cancels last minute?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Frequent cancellations negatively impact a driver's rating and may lead to suspension
+                                from the platform. If your driver cancels, we'll notify you immediately and help you
+                                find an alternative ride.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-cta">
+                    <p>Still have safety concerns?</p>
+                    <a href="contact.html" class="btn btn-primary">
+                        <i class="fas fa-headset"></i> Contact Our Safety Team
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+
+    <script src="{% static 'js/safety.js' %}"></script>
+</body>
+
+</html>

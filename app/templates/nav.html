@@ -1,0 +1,110 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RideShare Ghana - Carpooling Made Easy</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/images/favicon.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+</head>
+
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
+          class="d-inline-block align-text-top me-2">
+        <span>RideShare</span>
+      </a>
+
+      <!-- Hamburger for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_rides' %}">My Ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'safety' %}">Safety</a>
+          </li>
+          <!--  -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
+          </li>
+        </ul>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown ms-auto">
+          <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
+              class="rounded-circle me-2">
+            {% else %}
+            <div
+              class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+              style="width: 32px; height: 32px;">
+              {{ request.user.username|first|upper }}
+            </div>
+            {% endif %}
+            <span class="d-none d-lg-inline">{{ request.user.username }}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+            <li><a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="fas fa-user-edit me-2"></i>My profile 
+              </a></li>
+            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+              </a></li>
+
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a></li>
+          </ul>
+        </div>
+
+        {% else %}
+        <!-- Auth Buttons -->
+        <div class="d-flex ms-auto">
+          <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
+          <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+    crossorigin="anonymous"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

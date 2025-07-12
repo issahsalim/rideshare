@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer a Ride | RideShare Ghana</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/offer-ride.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="{% static 'images/gh.jpg' %}" alt="logo" width="30" height="30"
+          class="d-inline-block align-text-top me-2">
+        <span>RideShare</span>
+      </a>
+
+      <!-- Hamburger for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'find_ride' %}">Find a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_rides' %}">My Ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'offer_ride' %}">Offer a ride</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'how_it_work' %}">How it works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'safety' %}">Safety</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="{% url 'help' %}">Help</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_booking' %}">My Bookings</a>
+          </li>
+        </ul>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown ms-auto">
+          <a class="btn dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" alt="Profile" width="32" height="32"
+              class="rounded-circle me-2">
+            {% else %}
+            <div
+              class="profile-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+              style="width: 32px; height: 32px;">
+              {{ request.user.username|first|upper }}
+            </div>
+            {% endif %}
+            <span class="d-none d-lg-inline">{{ request.user.username }}</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+            <li><a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="fas fa-user-edit me-2"></i>My profile 
+              </a></li>
+            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+              </a></li>
+
+        
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a></li>
+          </ul>
+        </div>
+
+        {% else %}
+        <!-- Auth Buttons -->
+        <div class="d-flex ms-auto">
+          <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log in</a>
+          <a href="{% url 'signup' %}" class="btn btn-primary">Sign up</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+    {% if messages %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            {% for message in messages %}
+            <div class="col-md-8">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+  <div class="alert alert-danger">
+    {% for error in form.non_field_errors %}
+      <div>{{ error }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+    <!-- Main Content -->
+    <main class="offer-ride-container">
+        <div class="container">
+            <div class="page-header">
+                <h1>Offer a Ride</h1>
+                <p>Share your journey and save on travel costs</p>
+                <div class="ghana-flag">
+                    <span class="red"></span>
+                    <span class="gold"></span>
+                    <span class="green"></span>
+                    <span class="star">★</span>
+                </div>
+            </div>
+            <style>
+                input::placeholder {
+                    transform: translateX(15px);
+                }
+            </style>
+
+            <div class="offer-ride-form" action="{% url 'offer_ride' %}">
+                <form method="post" enctype="multipart/form-data" id="rideForm">
+                    {% csrf_token %}
+
+                    <div class="form-section">
+                        <h2><i class="fas fa-route"></i> Route Details</h2>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="departure">Departure From</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <!-- <input type="text" style="padding-left: 30px;" name="departure" id="departure" required placeholder="City or specific location"> -->
+                                    {{ form.departure }}
+                                    {% for error in form.departure.errors %}
+                                    <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="destination">Destination</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <!-- <input type="text" style="padding-left: 30px;" name="destination" id="destination" required placeholder="City or specific location"> -->
+                                    {{ form.destination }}
+                                    {% for error in form.destination.errors %}
+                                    <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="departure_date">Date</label>
+                                <div class="input-with-icon">
+                                    <i class="far fa-calendar-alt"></i>
+                                    <!-- <input type="date" style="padding-left: 30px;" name="departure_date" id="departure_date" min="{{validDate}}" required> -->
+                                    {{ form.departure_date }}
+                                    {% for error in form.departure_date.errors %}
+                                    <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="departure_time">Time</label>
+                                <div class="input-with-icon">
+                                    <i class="far fa-clock"></i>
+                                    <!-- <input type="time" name="departure_time" id="departure_time" required> -->
+                                    {{ form.departure_time }}
+                                    {% for error in form.departure_time.errors %}
+                                    <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="available_seats">Available Seats</label>
+                                <!-- <input type="number" name="available_seats" id="available_seats" min="1"> -->
+                                {{ form.available_seats }}
+                                {% for error in form.available_seats.errors %}
+                                <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price_per_seat">Price per Seat (GH₵)</label>
+                            <!-- <input type="number" name="price_per_seat" id="price_per_seat" min="20" placeholder="e.g. 50" required> -->
+                            {{ form.price_per_seat }}
+                            {% for error in form.price_per_seat.errors %}
+                            <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                            {% endfor %}
+                            <p class="hint">Recommended price: GH₵50-80 for Accra-Kumasi route</p>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2><i class="fas fa-car"></i> Vehicle Information</h2>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="car_model">Model</label>
+                                <!-- <input type="text" name="car_model" id="car_model" placeholder="e.g. Corolla" required> -->
+                                {{ form.car_model }}
+                                {% for error in form.car_model.errors %}
+                                <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="car_year">Year</label>
+                                <!-- <input type="number" name="car_year" id="car_year" min="2000" max="2023" placeholder="e.g. 2020"> -->
+                                {{ form.car_year }}
+                                {% for error in form.car_year.errors %}
+                                <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="car_color">Color</label>
+                            <!-- <input type="text" name="car_color" id="car_color" placeholder="e.g. Red"> -->
+                            {{ form.car_color }}
+                            {% for error in form.car_color.errors %}
+                            <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="license_plate">License Plate</label>
+                            <!-- <input type="text" name="license_plate" id="license_plate" placeholder="e.g. GR 1234-20" required> -->
+                            {{ form.license_plate }}
+                            {% for error in form.license_plate.errors %}
+                            <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Driver's License</label>
+                            <div class="file-upload">
+                                <!-- <input type="file" name="driver_license" id="licence" accept="image/*"> -->
+                                {{ form.driver_license }}
+                                {% for error in form.driver_license.errors %}
+                                <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                {% endfor %}
+                                <label for="licence" class="upload-btn">
+                                    <i class="fas fa-camera"></i> Upload Photo
+                                </label>
+                                <!-- <span class="file-name">No file chosen</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Ghana Card (FRONT)</label>
+                            <div class="file-upload">
+                                <label for="ghcardf" class="upload-btn">
+                                    <i class="fas fa-camera"></i> Upload Photo
+                                </label>
+                                {{ form.gh_card_front }}
+                                {% for error in form.gh_card_front.errors %}
+                                <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                {% endfor %}
+
+                                
+                            </div>
+                            <div class="form-group">
+                                <label>Ghana Card (BACK)</label>
+                                <div class="file-upload">
+                                    <!-- <input type="file" name="gh_card_back" id="ghcardb" accept="image/*"> -->
+                                    {{ form.gh_card_back }}
+                                    {% for error in form.gh_card_back.errors %}
+                                    <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                    {% endfor %}
+                                    <label for="ghcardb" class="upload-btn">
+                                        <i class="fas fa-camera"></i> Upload Photo
+                                    </label>
+                                    <!-- <span class="file-name">No file chosen</span> -->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Car Photo</label>
+                                <div class="file-upload">
+                                    <!-- <input type="file" name="car_photo" id="carPhoto" accept="image/*"> -->
+                                    {{ form.car_photo }}
+                                    {% for error in form.car_photo.errors %}
+                                    <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                    {% endfor %}
+                                    <label for="carPhoto" class="upload-btn">
+                                        <i class="fas fa-camera"></i> Upload Photo
+                                    </label>
+                                    <!-- <span class="file-name">No file chosen</span> -->
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2><i class="fas fa-sliders-h"></i> Ride Preferences</h2>
+
+                        <div class="form-group">
+                            <label for="amenities">Amenities</label>
+                            <div class="checkbox-group">
+                                <!-- <label><input type="checkbox" name="amenities" value="ac"> Air Conditioning</label>
+                <label><input type="checkbox" name="amenities" value="wifi"> WI-FI</label>
+                <label><input type="checkbox" name="amenities" value="usb"> USB Charging</label>
+                <label><input type="checkbox" name="amenities" value="non-smoking"> No Smoking</label>
+                <label><input type="checkbox" name="amenities" value="men"> Men ONLY</label>
+                <label><input type="checkbox" name="amenities" value="women"> Women ONLY</label> -->
+                                {{ form.amenities }}
+                                {% for error in form.amenities.errors %}
+                                <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="luggage_space">Luggage Space</label>
+                            <!-- <select name="luggage_space" id="luggage_space">
+                <option value="small">Small bags only</option>
+                <option value="medium">Medium luggage (1 per passenger)</option>
+                <option value="large">Large luggage possible</option>
+            </select> -->
+                            {{ form.luggage_space }}
+                            {% for error in form.luggage_space.errors %}
+                            <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="additional_info">Additional Information</label>
+                            <!-- <textarea name="additional_info" id="additional_info" rows="4" placeholder="Any special instructions, meeting point details, etc."></textarea> -->
+                            {{ form.additional_info }}
+                            {% for error in form.additional_info.errors %}
+                            <div class="text-danger" style="padding-left: 30px;">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-actions mb-4 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary submit-btn">
+                            <i class="fas fa-paper-plane"></i> Publish Ride
+                        </button>
+                    </div>
+                </form>
+
+
+                <div class="map-preview" id="mapPreview">
+                    <!-- Map will be rendered here -->
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Route map will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="safety-tips">
+                <h3><i class="fas fa-shield-alt"></i> Safety Tips for Drivers</h3>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <i class="fas fa-id-card"></i>
+                        <h4>Verify Passengers</h4>
+                        <p>Check passenger profiles and ratings before accepting bookings</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-handshake"></i>
+                        <h4>Meet in Public</h4>
+                        <p>Arrange to meet in well-lit, public locations</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <h4>Cash Handling</h4>
+                        <p>Agree on payment amount before departure</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-car-crash"></i>
+                        <h4>Vehicle Safety</h4>
+                        <p>Ensure your vehicle is in good condition before trips</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        {% include 'footer.html' %}
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="js/offer-ride.js"></script>
+</body>
+
+</html>
